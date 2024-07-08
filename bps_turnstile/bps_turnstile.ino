@@ -20,6 +20,7 @@ static const uint8_t D9 = 3;
 static const uint8_t D10 = 1;
 
 #define LED_PIN D2
+#define BUZZER D0
 #define SS_PIN D4
 #define RST_PIN D3
 
@@ -44,6 +45,7 @@ void setup() {
   }
 
   pinMode(LED_PIN, OUTPUT);
+  pinMode(BUZZER, OUTPUT);
 
   Ethernet.init(5);
   Ethernet.begin(mac, ip, dns, gateway, subnet);
@@ -110,10 +112,21 @@ void sendToAPI(String sn) {
             Serial.println("Success");
             success = true;
             digitalWrite(LED_PIN, HIGH);
-            delay(1000);
+            digitalWrite(BUZZER, HIGH);
+            delay(100);
+            digitalWrite(BUZZER, LOW);
+            delay(100);
+            digitalWrite(BUZZER, HIGH);
+            delay(100);
+            digitalWrite(BUZZER, LOW);
+            delay(700);
             digitalWrite(LED_PIN, LOW);
           } else {
             Serial.println("No money");
+            digitalWrite(BUZZER, HIGH);
+            delay(1000);
+            digitalWrite(BUZZER, LOW);
+
           }
           break;
         }
