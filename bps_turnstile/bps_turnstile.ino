@@ -2,7 +2,7 @@
 // https://www.arduino.cc/reference/en/libraries/ethernet/
 // https://github.com/miguelbalboa/rfid
 // http://arduino.esp8266.com/stable/package_esp8266com_index.json
-
+//ASHA TECH CO
 #include <SPI.h>
 #include <MFRC522.h>
 #include <Ethernet.h>
@@ -19,19 +19,38 @@ static const uint8_t D8 = 15;
 static const uint8_t D9 = 3;
 static const uint8_t D10 = 1;
 
+//pin door
 #define LED_PIN D2
+//pinbuzzer
 #define BUZZER D0
+
 #define SS_PIN D4
 #define RST_PIN D3
 
-byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
-IPAddress ip(192, 168, 1, 109);
-IPAddress dns(8, 8, 8, 8);
-IPAddress gateway(192, 168, 1, 1);
-IPAddress subnet(255, 255, 255, 0);
+/*
+22:33:CA:76:5E:06  device 1
+0x22, 0x33, 0xCA, 0x76, 0x5E, 0x06 
 
-IPAddress serverIP(185, 78, 166, 46);
-int serverPort = 3133;
+
+83:7A:E6:EF:7A:42  device 2
+0x83, 0x7A, 0xE6, 0xEF, 0x7A, 0x42
+
+
+5B:C2:69:23:C0:90  device 3j
+0x5B, 0xC2, 0x69, 0x23, 0xC0, 0x90
+
+*/
+byte mac[] = {0x83, 0x7A, 0xE6, 0xEF, 0x7A, 0x42 };
+IPAddress ip(192, 168, 95, 1); //device 1,2,3
+IPAddress dns(172, 17, 5, 227);
+//  IPAddress dns(8, 8, 8, 8);
+IPAddress gateway(192, 168, 95, 254);
+IPAddress subnet(255, 255, 255, 0);
+String gate = "GATE 1";
+
+//ip api here
+IPAddress serverIP(172, 17, 5, 85);
+int serverPort = 3000;
 
 EthernetClient client;
 
@@ -55,6 +74,17 @@ void setup() {
 
   SPI.begin();      // Init SPI bus
   rfid.PCD_Init();  // Init MFRC522
+
+  // client.connect(serverIP, serverPort);
+  // delay(1000);
+
+  // Serial.println("connecting...");
+
+  // if (client.connected()) {
+  //   Serial.println("connected");
+  // } else {
+  //   Serial.println("connection failed");
+  // }
 }
 
 void loop() {
@@ -80,8 +110,11 @@ void loop() {
 }
 
 void sendToAPI(String sn) {
+ 
   String url = "/api/canteen/buffet";
-  String body = "{\"sn\": \"" + sn + "\", \"machine\": \"3\"}";
+ 
+ //edit machine here
+  String body = "{\"sn\": \"" + sn + "\", \"machine\": \"" + gate +"\"}";
 
   Serial.println("Sending payload:");
   Serial.println(body);
@@ -120,7 +153,7 @@ void sendToAPI(String sn) {
             delay(100);
             digitalWrite(BUZZER, LOW);
             delay(700);
-            digitalWrite(LED_PIN, LOW);
+                        digitalWrite(LED_PIN, LOW);
           } else {
             Serial.println("No money");
             digitalWrite(BUZZER, HIGH);
