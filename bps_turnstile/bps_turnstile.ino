@@ -40,13 +40,12 @@ static const uint8_t D10 = 1;
 0x5B, 0xC2, 0x69, 0x23, 0xC0, 0x90
 
 */
-byte mac[] = {0x83, 0x7A, 0xE6, 0xEF, 0x7A, 0x42 };
+byte mac[] = { 0x22, 0x33, 0xCA, 0x76, 0x5E, 0x06 };
 IPAddress ip(192, 168, 95, 1); //device 1,2,3
 IPAddress dns(172, 17, 5, 227);
-//  IPAddress dns(8, 8, 8, 8);
 IPAddress gateway(192, 168, 95, 254);
 IPAddress subnet(255, 255, 255, 0);
-String gate = "GATE 1";
+String gate = "GATE 2";
 
 //ip api here
 IPAddress serverIP(172, 17, 5, 85);
@@ -67,7 +66,7 @@ void setup() {
   pinMode(BUZZER, OUTPUT);
 
   Ethernet.init(5);
-  Ethernet.begin(mac, ip, dns, gateway, subnet);
+ Ethernet.begin(mac, ip, dns, gateway, subnet);
 
   Serial.println();
   Serial.println(Ethernet.localIP());
@@ -75,16 +74,6 @@ void setup() {
   SPI.begin();      // Init SPI bus
   rfid.PCD_Init();  // Init MFRC522
 
-  // client.connect(serverIP, serverPort);
-  // delay(1000);
-
-  // Serial.println("connecting...");
-
-  // if (client.connected()) {
-  //   Serial.println("connected");
-  // } else {
-  //   Serial.println("connection failed");
-  // }
 }
 
 void loop() {
@@ -145,15 +134,8 @@ void sendToAPI(String sn) {
             Serial.println("Success");
             success = true;
             digitalWrite(LED_PIN, HIGH);
-            digitalWrite(BUZZER, HIGH);
-            delay(100);
-            digitalWrite(BUZZER, LOW);
-            delay(100);
-            digitalWrite(BUZZER, HIGH);
-            delay(100);
-            digitalWrite(BUZZER, LOW);
-            delay(700);
-                        digitalWrite(LED_PIN, LOW);
+            delay(2000);
+            digitalWrite(LED_PIN, LOW);
           } else {
             Serial.println("No money");
             digitalWrite(BUZZER, HIGH);
