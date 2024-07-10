@@ -40,15 +40,15 @@ static const uint8_t D10 = 1;
 0x5B, 0xC2, 0x69, 0x23, 0xC0, 0x90
 
 */
-byte mac[] = {0x83, 0x7A, 0xE6, 0xEF, 0x7A, 0x43};
-IPAddress ip(192, 168, 95, 3); //device 1,2,3
+byte mac[] = {0x22, 0x33, 0xCA, 0x76, 0x5E, 0x06 };
+IPAddress ip(192, 168, 95, 1); //device 1,2,3
 IPAddress dns(172, 17, 5, 227);
 IPAddress gateway(192, 168, 95, 254);
 IPAddress subnet(255, 255, 255, 0);
-String gate = "GATE 2";
+String gate = "GATE 1";
 
 //ip api here
-IPAddress serverIP(172, 17, 5, 85);
+IPAddress serverIP(172, 17, 5, 83);
 int serverPort = 3000;
 
 EthernetClient client;
@@ -58,15 +58,20 @@ MFRC522 rfid(SS_PIN, RST_PIN);
 void setup() {
   // Open serial communications and wait for port to open:
   Serial.begin(9600);
+  
   while (!Serial) {
     ;  // wait for serial port to connect. Needed for native USB port only
   }
 
   pinMode(LED_PIN, OUTPUT);
   pinMode(BUZZER, OUTPUT);
+  digitalWrite(BUZZER, LOW);
+  
+
+
 
   Ethernet.init(5);
- Ethernet.begin(mac, ip, dns, gateway, subnet);
+  Ethernet.begin(mac, ip, dns, gateway, subnet);
 
   Serial.println();
   Serial.println(Ethernet.localIP());
@@ -96,6 +101,7 @@ void loop() {
 
   // Stop encryption on PCD
   rfid.PCD_StopCrypto1();
+  digitalWrite(BUZZER, LOW);
 }
 
 void sendToAPI(String sn) {
@@ -136,6 +142,7 @@ void sendToAPI(String sn) {
             digitalWrite(LED_PIN, HIGH);
             delay(2000);
             digitalWrite(LED_PIN, LOW);
+            digitalWrite(BUZZER, HIGH);
           } else {
             Serial.println("No money");
             digitalWrite(BUZZER, HIGH);
@@ -156,6 +163,17 @@ void sendToAPI(String sn) {
     Serial.println("Disconnected from server");
   } else {
     Serial.println("Connection failed");
+    digitalWrite(BUZZER, HIGH);
+    delay(300);
+    digitalWrite(BUZZER, LOW);
+    delay(300);
+    digitalWrite(BUZZER, HIGH);
+    delay(300);
+    digitalWrite(BUZZER, LOW);
+    delay(300);
+    digitalWrite(BUZZER, HIGH);
+    delay(300);
+    digitalWrite(BUZZER, LOW);
   }
 }
 
